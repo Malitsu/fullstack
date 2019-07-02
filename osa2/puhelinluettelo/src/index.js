@@ -9,10 +9,15 @@ const Person = ({person}) => {
 
 const App = () => {
   const [ persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '123 123', id: 0 }
-  ]) 
+    { name: 'Arto Hellas', number: '040-123456' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' }
+  ])
+
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
+  const [ search, setSearch ] = useState('')
 
   const addPerson= (event) => {
       event.preventDefault()
@@ -20,8 +25,7 @@ const App = () => {
         name: newName,
         number: newNumber,
         date: new Date().toISOString(),
-        important: Math.random() > 0.5,
-        id: newName
+        important: Math.random() > 0.5
       }
       setNewName('')
       setNewNumber('')
@@ -32,7 +36,7 @@ const App = () => {
         setPersons(persons.concat(personObject))
       }
   }
-
+  
   const handleNameChange = (event) => {
       setNewName(event.target.value)
   }
@@ -41,9 +45,17 @@ const App = () => {
       setNewNumber(event.target.value)
   }
 
-  const rows = () => persons.map(person =>
+  const handleSearchChange = (event) => {
+      setSearch(event.target.value)
+  }
+
+  const personsToShow = (search === '')
+    ? persons
+    : persons.filter(person => person.name.toLowerCase().includes(search.toLowerCase()))
+
+  const rows = () => personsToShow.map(person =>
         <Person
-            key={person.id}
+            key={person.name}
             person={person}
         />
     )
@@ -51,6 +63,15 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <form>
+          <div>
+              filter shown with:    <input
+                                        value={search}
+                                        onChange={handleSearchChange}    
+                                    />
+          </div>
+      </form>
+      <h2>add a new</h2>
       <form onSubmit={addPerson}>
         <div>
           name: <input
