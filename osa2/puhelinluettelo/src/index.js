@@ -42,32 +42,7 @@ const Filter = ({search, setSearch}) => {
     )
 }
 
-const PersonForm = ({persons, newName, newNumber, setNewName, setNewNumber, setPersons}) => {
-    const handleNameChange = (event) => {
-        setNewName(event.target.value)
-    }
-
-    const handleNumberChange = (event) => {
-        setNewNumber(event.target.value)
-    }
-
-    const addPerson= (event) => {
-        event.preventDefault()
-        const personObject = {
-          name: newName,
-          number: newNumber,
-          date: new Date().toISOString(),
-          important: Math.random() > 0.5
-        }
-        setNewName('')
-        setNewNumber('')
-        if (persons.filter(person => person.name === newName).length > 0){
-            window.alert(`${newName} is already added to phonebook`)
-        }
-        else {
-          setPersons(persons.concat(personObject))
-        }
-    }
+const PersonForm = ({persons, newName, newNumber, handleNameChange, handleNumberChange, addPerson}) => {
 
     return (
       <form onSubmit={addPerson}>
@@ -100,6 +75,32 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ search, setSearch ] = useState('')
 
+  const handleNameChange = (event) => {
+      setNewName(event.target.value)
+  }
+
+  const handleNumberChange = (event) => {
+      setNewNumber(event.target.value)
+  }
+
+  const addPerson= (event) => {
+      event.preventDefault()
+      const personObject = {
+        name: newName,
+        number: newNumber,
+        date: new Date().toISOString(),
+        important: Math.random() > 0.5
+      }
+      setNewName('')
+      setNewNumber('')
+      if (persons.filter(person => person.name === newName).length > 0){
+          window.alert(`${newName} is already added to phonebook`)
+      }
+      else {
+        setPersons(persons.concat(personObject))
+      }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -112,9 +113,9 @@ const App = () => {
           persons={persons}
           newName={newName}
           newNumber={newNumber}
-          setNewName={setNewName}
-          setNewNumber={setNewNumber}
-          setPersons={setPersons}
+          handleNameChange={handleNameChange}
+          handleNumberChange={handleNumberChange}
+          addPerson={addPerson}
       />
       <h2>Numbers</h2>
         <Persons 
