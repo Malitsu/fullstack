@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 
 const Person = ({person}) => {
     return (
@@ -67,10 +67,10 @@ const PersonForm = ({persons, newName, newNumber, handleNameChange, handleNumber
 const App = () => {
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
   }, [])
 
@@ -95,16 +95,16 @@ const App = () => {
         date: new Date().toISOString(),
         important: Math.random() > 0.5
       }
-      setNewName('')
-      setNewNumber('')
       if (persons.filter(person => person.name === newName).length > 0){
           window.alert(`${newName} is already added to phonebook`)
       }
       else {
-        axios
-        .post('http://localhost:3001/persons', personObject)
-        .then(response => {
-          setPersons(persons.concat(response.data))
+        personService
+        .create(personObject)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')          
         })
       }
   }

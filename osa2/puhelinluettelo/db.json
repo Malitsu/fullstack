@@ -33,6 +33,13 @@
       "date": "2019-07-07T07:42:14.963Z",
       "important": false,
       "id": 6
+    },
+    {
+      "name": "Arvo Penttilä",
+      "number": "696969696969",
+      "date": "2019-07-07T12:48:12.300Z",
+      "important": true,
+      "id": 7
     }
   ]
 }
