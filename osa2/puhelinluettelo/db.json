@@ -19,27 +19,6 @@
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": 4
-    },
-    {
-      "name": "Alli Kuikamoinen",
-      "number": "123 123",
-      "date": "2019-07-07T06:36:07.593Z",
-      "important": false,
-      "id": 5
-    },
-    {
-      "name": "Timo Hokkanen",
-      "number": "002 0009 006",
-      "date": "2019-07-07T07:42:14.963Z",
-      "important": false,
-      "id": 6
-    },
-    {
-      "name": "Arvo Penttilä",
-      "number": "696969696969",
-      "date": "2019-07-07T12:48:12.300Z",
-      "important": true,
-      "id": 7
     }
   ]
 }

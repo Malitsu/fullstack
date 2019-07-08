@@ -2,13 +2,27 @@ import ReactDOM from 'react-dom';
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
 
-const Person = ({person}) => {
+const Person = ({person, handleDelete}) => {
+  const removePerson = (event) => {
+    event.preventDefault()
+    if (window.confirm(`Delete ${person.name} ?`)) { 
+      personService
+      .remove(person.id)
+      .then( () => {
+        handleDelete()
+      })
+    }
+  }
+
     return (
-        <p>{person.name.toString()} {person.number.toString()}</p>
+      <p>
+        {person.name.toString()} {person.number.toString()}
+        <button onClick={removePerson} >delete</button>
+      </p>
     )
 }
 
-const Persons = ({persons, search}) => {
+const Persons = ({persons, search, handleDelete}) => {
 
   const personsToShow = (search === '')
   ? persons
@@ -18,6 +32,7 @@ const Persons = ({persons, search}) => {
       <Person
           key={person.name}
           person={person}
+          handleDelete={handleDelete}
       />
   )
 
@@ -87,7 +102,15 @@ const App = () => {
       setNewNumber(event.target.value)
   }
 
-  const addPerson= (event) => {
+  const handleDelete = () => {
+    personService
+    .getAll()
+    .then(initialPersons => {
+      setPersons(initialPersons)
+    })
+  }
+
+  const addPerson = (event) => {
       event.preventDefault()
       const personObject = {
         name: newName,
@@ -128,7 +151,8 @@ const App = () => {
       <h2>Numbers</h2>
         <Persons 
           persons={persons}
-          search={search} 
+          search={search}
+          handleDelete={handleDelete}
         />
     </div>
   )
