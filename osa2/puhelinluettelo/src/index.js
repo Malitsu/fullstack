@@ -2,27 +2,26 @@ import ReactDOM from 'react-dom';
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
 
-const Person = ({person, handleDelete}) => {
+const Person = ({person, handleUpdate}) => {
   const removePerson = (event) => {
     event.preventDefault()
     if (window.confirm(`Delete ${person.name} ?`)) { 
       personService
       .remove(person.id)
       .then( () => {
-        handleDelete()
+        handleUpdate()
       })
     }
   }
 
     return (
       <p>
-        {person.name.toString()} {person.number.toString()}
-        <button onClick={removePerson} >delete</button>
+        {person.name.toString()} {person.number.toString()} <button onClick={removePerson} >delete</button>
       </p>
     )
 }
 
-const Persons = ({persons, search, handleDelete}) => {
+const Persons = ({persons, search, handleUpdate}) => {
 
   const personsToShow = (search === '')
   ? persons
@@ -32,7 +31,7 @@ const Persons = ({persons, search, handleDelete}) => {
       <Person
           key={person.name}
           person={person}
-          handleDelete={handleDelete}
+          handleUpdate={handleUpdate}
       />
   )
 
@@ -102,7 +101,7 @@ const App = () => {
       setNewNumber(event.target.value)
   }
 
-  const handleDelete = () => {
+  const handleUpdate = () => {
     personService
     .getAll()
     .then(initialPersons => {
@@ -118,8 +117,17 @@ const App = () => {
         date: new Date().toISOString(),
         important: Math.random() > 0.5
       }
-      if (persons.filter(person => person.name === newName).length > 0){
-          window.alert(`${newName} is already added to phonebook`)
+      const filtPersons = persons.filter(person => person.name === newName)
+      if (filtPersons.length > 0){
+          if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+              personService
+              .update(filtPersons[0].id, personObject)
+              .then( () => {
+                handleUpdate()
+                setNewName('')
+                setNewNumber('')       
+              })
+          }
       }
       else {
         personService
@@ -152,7 +160,7 @@ const App = () => {
         <Persons 
           persons={persons}
           search={search}
-          handleDelete={handleDelete}
+          handleUpdate={handleUpdate}
         />
     </div>
   )
