@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom';
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
+import './index.css'
 
 const Person = ({person, handleUpdate}) => {
   const removePerson = (event) => {
@@ -9,7 +10,7 @@ const Person = ({person, handleUpdate}) => {
       personService
       .remove(person.id)
       .then( () => {
-        handleUpdate()
+        handleUpdate(`Removed ${person.name}`)
       })
     }
   }
@@ -57,7 +58,7 @@ const Filter = ({search, setSearch}) => {
     )
 }
 
-const PersonForm = ({persons, newName, newNumber, handleNameChange, handleNumberChange, addPerson}) => {
+const PersonForm = ({newName, newNumber, handleNameChange, handleNumberChange, addPerson}) => {
 
     return (
       <form onSubmit={addPerson}>
@@ -78,6 +79,18 @@ const PersonForm = ({persons, newName, newNumber, handleNameChange, handleNumber
     )
 }
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="message">
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
 
   useEffect(() => {
@@ -92,6 +105,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ search, setSearch ] = useState('')
+  const [ message, setMessage] = useState(null)
 
   const handleNameChange = (event) => {
       setNewName(event.target.value)
@@ -101,11 +115,16 @@ const App = () => {
       setNewNumber(event.target.value)
   }
 
-  const handleUpdate = () => {
+  const handleUpdate = (message) => {
     personService
     .getAll()
     .then(initialPersons => {
       setPersons(initialPersons)
+      console.log(message)
+      setMessage(message)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     })
   }
 
@@ -123,9 +142,7 @@ const App = () => {
               personService
               .update(filtPersons[0].id, personObject)
               .then( () => {
-                handleUpdate()
-                setNewName('')
-                setNewNumber('')       
+                handleUpdate(`Updated ${personObject.name}`)
               })
           }
       }
@@ -134,15 +151,22 @@ const App = () => {
         .create(personObject)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
-          setNewName('')
-          setNewNumber('')          
+          setMessage(
+            `Added ${returnedPerson.name}`
+          )
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
         })
       }
+      setNewName('')
+      setNewNumber('')
   }
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <Notification message={message} />
       <Filter
           search={search}
           setSearch={setSearch}
