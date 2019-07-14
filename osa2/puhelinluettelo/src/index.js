@@ -91,6 +91,18 @@ const Notification = ({ message }) => {
   )
 }
 
+const Error = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
 
   useEffect(() => {
@@ -106,6 +118,7 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ search, setSearch ] = useState('')
   const [ message, setMessage] = useState(null)
+  const [ error, setError] = useState(null)
 
   const handleNameChange = (event) => {
       setNewName(event.target.value)
@@ -120,7 +133,6 @@ const App = () => {
     .getAll()
     .then(initialPersons => {
       setPersons(initialPersons)
-      console.log(message)
       setMessage(message)
       setTimeout(() => {
         setMessage(null)
@@ -143,6 +155,12 @@ const App = () => {
               .update(filtPersons[0].id, personObject)
               .then( () => {
                 handleUpdate(`Updated ${personObject.name}`)
+              })
+              .catch(error => {
+                setError(`Information of ${newName} has already been removed from server`)
+                setTimeout(() => {
+                  setError(null)
+                }, 5000)
               })
           }
       }
@@ -167,6 +185,7 @@ const App = () => {
     <div>
       <h1>Phonebook</h1>
       <Notification message={message} />
+      <Error message={error} />
       <Filter
           search={search}
           setSearch={setSearch}

@@ -28,11 +28,11 @@
       "id": 5
     },
     {
-      "name": "Arvo Penttilä",
-      "number": "456456 456",
-      "date": "2019-07-13T18:42:36.639Z",
-      "important": false,
-      "id": 7
+      "name": "Timo Hokkanen",
+      "number": "000 0000",
+      "date": "2019-07-14T15:42:29.547Z",
+      "important": true,
+      "id": 6
     }
   ]
 }
