@@ -175,6 +175,12 @@ const App = () => {
             setMessage(null)
           }, 5000)
         })
+        .catch(error => {
+          setError(`${error.response.data.error}`)
+          setTimeout(() => {
+            setError(null)
+          }, 5000)
+        })
       }
       setNewName('')
       setNewNumber('')
